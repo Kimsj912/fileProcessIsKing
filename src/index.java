@@ -5,7 +5,7 @@ import java.util.function.Function;
 public class index {
     // TODO 1: GUI만들기는 후반에...
     // File Root Setting
-    private static final String fromFileDir = "C:\\Users\\김수정\\Desktop\\Growth\\강의자료\\섹션2";
+    private static final String fromFileDir = "C:\\Users\\김수정\\Desktop\\Growth\\강의자료\\섹션3";
     private static final String toFileDir = "C:\\Users\\김수정\\Desktop\\2022년여름\\javascript-algorithm\\sujeong";
     // Setup File Name
     private static String sectionName = "03";
@@ -17,9 +17,10 @@ public class index {
     // Main
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     public static void main(String[] args) throws IOException{
-        System.out.println("파일 만드는 작업 17번 하기 귀찮아서 만든 프로그램");
+        System.out.println("파일 만드는 작업 여러번 하기 귀찮아서 만든 프로그램");
         System.out.println("나중에 개선하면 쓸모있겄지");
         System.out.println("title : FileProcessIsKing");
+        System.out.println("=======================================================");
 
 
         // Check File Directories
@@ -65,27 +66,64 @@ public class index {
 
 
         // Check Destination Directory is Right
-        for (int index = 0; index < Objects.requireNonNull(fromDir.list()).length; index++) {
-            String fileName = Objects.requireNonNull(fromDir.list())[index];
+        String[] curDir = Objects.requireNonNull(fromDir.list());
+        int curDirSize = curDir.length;
+        for (int index = 1; index <= curDirSize; index++) {
+            String fileName = curDir[index-1];
             if(!fileName.contains(extension)) continue;
             System.out.println("[" + index + "] " + fileName);
         }
 
-        String[] checkFileListGuide = {"입력하신 디렉토리로 파일 입력을 진행합니다.", "프로그램을 종료합니다. 디렉토리를 다시 입력해주세요."};
+        ArrayList<Integer> selectedIdxes = new ArrayList<>();
+        String[] checkFileListGuide = {"입력하신 디렉토리로 파일 입력을 진행합니다.","선택할 파일 인덱스를 띄어쓰기로 구분하여 입력하시오." , "변경하지 않을 파일 인덱스를 띄어쓰기로 구분하여 입력하시오.", "프로그램을 종료합니다. 디렉토리를 다시 입력해주세요."};
         int inputFileListNum =
-                inputProceedNumber("현재 파일 리스트는 다음과 같습니다. 진행을 동의하십니까?\n[1] 맞음 \n[2] 아니오", checkFileListGuide); // TODO: 부분선택 기능 추가
+                inputProceedNumber("현재 파일 리스트는 다음과 같습니다. 진행을 동의하십니까?\n[1] 모두 진행 \n[2] 부분 선택 \n[3] 부분 제거 \n[4] 종료", checkFileListGuide); // TODO: 부분선택 기능 추가
         switch (inputFileListNum) {
             case 1:
                 break;
+            case 2: {
+                // add inputFileListOrg's index
+                String inputFileListOrg = br.readLine();
+                if(Objects.equals(inputFileListOrg, "")) {
+                    System.out.println("입력하신 값이 없습니다. 잘못 입력하셨습니다.");
+                    System.exit(0);
+                }
+                String[] inputFileList =inputFileListOrg.replace("\n"," ").strip().split(" ");
+                for (String s : inputFileList) {
+                    selectedIdxes.add(Integer.parseInt(s));
+                }
+                break;
+            }
+            case 3: {
+                // remove inputFileListOrg's index
+                String inputFileListOrg = br.readLine();
+                if(Objects.equals(inputFileListOrg, "")) {
+                    System.out.println("입력하신 값이 없습니다. 잘못 입력하셨습니다.");
+                    System.exit(0);
+                }
+                String[] inputFileList =inputFileListOrg.replace("\n"," ").strip().split(" ");
+                int[] inputFileListInt = Arrays.stream(inputFileList).mapToInt(Integer::parseInt).toArray();
+
+                for (int idx = 1; idx <= curDirSize; idx++) {
+                    int finalIdx = idx;
+                    if(Arrays.stream(inputFileListInt).anyMatch(i -> i == finalIdx)) continue;
+                    selectedIdxes.add(idx);
+                }
+                break;
+            }
             default:
                 System.exit(0);
+                break;
         }
 
         // Read File
         ArrayList<String> problemNameArr = new ArrayList<>(); // fromDir의 파일 이름들 저장
-        for(String fileName :Objects.requireNonNull(fromDir.list())){
+        for (int index = 1; index <= curDirSize; index++) {
+            String fileName = curDir[index-1];
             // if file extension is not inputExtension, skip
             if (!fileName.contains(extension)) continue;
+            // if file index is not in selectedIdxes, skip
+            if(!selectedIdxes.contains(index)) continue;
 
             // get file Name
             int fileNumber = Integer.parseInt(fileName.transform((Function<? super String, ? extends String>) s -> s.substring(0, s.indexOf("."))));
