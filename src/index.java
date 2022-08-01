@@ -186,7 +186,15 @@ public class index {
             // 맨 첫 줄
             else if(line.contains("<script>")) {
                 isStartChecked = true;
-                parts.append("console.time(`time`);\n");
+                parts.append("""
+                        // 풀이시간(소요시간)
+
+                        // 아이디어
+
+                        // 개선과정
+
+                        +console.time(`time`);
+                        """);
             }
 
             // script 내부일 때
