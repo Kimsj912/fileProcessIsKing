@@ -178,7 +178,7 @@ public class index {
         // 읽은 후         false               true
         boolean isStartChecked = false;
         boolean isEndChecked = false;
-        String line;
+        String line = "console.time(`time`)";
         while((line = br.readLine())!=null){
             if(line.contains("</script>")) isEndChecked = true;
             if(isStartChecked && !isEndChecked){
@@ -186,7 +186,7 @@ public class index {
             }
             if(line.contains("<script>")) isStartChecked = true;
         }
-        return parts.toString().trim();
+        return parts.toString().trim().concat("\nconsole.timeEnd('time')");
     }
 
     // 파일 작성하기
