@@ -13,7 +13,7 @@ public class EnumContants {
     public enum EFileDirectories {
         ;
         // File Root Setting
-        private static final String fromFileDir = "C:\\Users\\김수정\\Desktop\\Growth\\강의자료\\섹션4";
+        private static final String fromFileDir = "C:\\Users\\김수정\\Desktop\\Growth\\강의자료";
         private static final String toFileDir = "C:\\Users\\김수정\\Desktop\\2022년여름\\javascript-algorithm\\sujeong";
         private static final String defaultExtension = "txt";
 
