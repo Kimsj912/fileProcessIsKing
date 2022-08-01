@@ -3,7 +3,7 @@ package Global;
 public class EnumContants {
     // MainFrameView Enum Data (Set Frame Size etc.)
     public enum EMainFrameView {
-        x(200), y(100), w(800), h(600);
+        x(200), y(100), w(1600), h(800);
 
         private int value;
         EMainFrameView(int value) {this.value = value; }
