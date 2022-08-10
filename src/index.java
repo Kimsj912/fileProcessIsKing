@@ -1,8 +1,5 @@
 import Components.MyFileChooser;
-import Global.EnumContants.EFileDirectories;
-
 import javax.swing.*;
-import java.awt.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -14,13 +11,13 @@ public class index {
     // TODO 1: GUI만들기는 후반에...
 
     // Setup File Name
-    private static String sectionName = "7";
-
     private static File fromDir;
     private static File toDir;
 
+    // Attributes
+    private static final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
     // Main.Main
-    private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     public static void main(String[] args) throws IOException{
         System.out.println("파일 만드는 작업 여러번 하기 귀찮아서 만든 프로그램");
         System.out.println("나중에 개선하면 쓸모있겄지");
@@ -38,9 +35,9 @@ public class index {
             fromFileChooserStatus = fromFileChooser.showOpenDialog(null);
         }
         File[] curDir = fromFileChooser.getSelectedFiles();
-        fromDir = fromFileChooser.getSelectedFiles()[0].getAbsoluteFile();
+        fromDir = fromFileChooser.getSelectedFiles()[0].getParentFile();
 
-        sectionName = fromDir.getParent().substring(fromDir.getParent().lastIndexOf("\\")+1);
+        String sectionName = fromDir.getName().substring(fromDir.getName().lastIndexOf("\\") + 1);
 
         assert curDir != null;
         int curDirSize = curDir.length;
@@ -81,29 +78,26 @@ public class index {
             }
 
             // 전체 동의 아니면 해당 switch 문을 통해 원하는 행동을 선택할 수 있게 함
-            int inputNewFileNameNum = inputProceedNumber("새로운 폴더명은 다음과 같습니다.\n"+newFileName+"\n동의하십니까?\n[1] 동의 \n[2] 거절\n[3] 이후 전체 동의"
-                    , new String[]{"해당 폴더명으로 생성을 진행합니다.", "새로운 폴더명을 입력해주세요. 종료를 원하시면 엔터를 눌러주세요.", "이후 모든 파일의 생성을 시작합니다."});
-            switch (inputNewFileNameNum) {
-                case 2:
+            String[] inputNewFileNameSelectArr = new String[]{"해당 폴더명으로 생성을 진행합니다.", "새로운 폴더명을 입력해주세요. 종료를 원하시면 엔터를 눌러주세요.", "이후 모든 파일의 생성을 시작합니다."};
+            int inputNewFileNameNum = inputProceedNumber("새로운 폴더명은 다음과 같습니다.\n"+newFileName+"\n동의하십니까?\n[1] 동의 \n[2] 거절(아무 입력 없으면 종료)\n[3] 이후 전체 동의", inputNewFileNameSelectArr);
+            int[] inputNewFileNameSelectNumArr = new int[]{1, 2, 3};
+            if(Arrays.stream(inputNewFileNameSelectNumArr).anyMatch(value -> value == inputNewFileNameNum)) {
+                if (inputNewFileNameNum == 2) {
                     // get new File name from User
                     newFileName = br.readLine();
-                    if(newFileName.equals("") || newFileName.equals("\n")){
-                        System.exit(0);
-                    }
-                    System.out.println("해당 파일로 진행합니다. \n"+newFileName);
-                case 1:
-                    // get file Content & Write File
-                    String content = extractSolutionPart(fileName);
-                    System.out.println("해당 파일의 내용:\n"+content);
-                    writeFile(newFileName, extractSolutionPart(fileName));
-                    break;
-                case 3: // 전체 동의
-                    allAccept =true;
-                    break;
-                default:
-                    System.out.println("올바른 값이 아닙니다. 잘못 입력하셨습니다.");
-                    System.exit(0);
-                    break;
+                    if (newFileName.equals("") || newFileName.equals("\n")) System.exit(0);
+                    System.out.println("해당 파일로 진행합니다. \n" + newFileName);
+                } else if(inputNewFileNameNum == 3){
+                    allAccept = true;
+                    System.out.println("전체 동의하였습니다.");
+                }
+                // get file Content & Write File
+                String content = extractSolutionPart(fileName);
+                System.out.println("해당 파일의 내용:\n"+content);
+                writeFile(newFileName, extractSolutionPart(fileName));
+            }else{
+                System.out.println("올바른 값이 아닙니다. 잘못 입력하셨습니다.");
+                System.exit(0);
             }
         }
 
