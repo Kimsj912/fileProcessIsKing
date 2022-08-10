@@ -137,7 +137,7 @@ public class index {
 
                         // 개선과정
 
-                        +console.time(`time`);
+                        console.time(`time`);
                         """);
             }
 
