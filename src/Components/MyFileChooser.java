@@ -16,6 +16,7 @@ public class MyFileChooser extends JFileChooser {
     public MyFileChooser(EFileChooserType isFromFile) {
         super();
         if(isFromFile.equals(EFileChooserType.FROM)) {
+            this.setDialogTitle("추출 하고 싶은 파일을 모두 선택해주세요.");
             this.setMultiSelectionEnabled(true);
             this.setCurrentDirectory(new File(EnumContants.EFileDirectories.getFromFileDir()));
             this.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -23,6 +24,7 @@ public class MyFileChooser extends JFileChooser {
                     "txt only", "txt");
             this.setFileFilter(filter);
         } else {
+            this.setDialogTitle("선택한 파일들이 생성될 폴더 하나를 선택해주세요.");
             this.setMultiSelectionEnabled(true);
             this.setCurrentDirectory(new File(EnumContants.EFileDirectories.getToFileDir()));
             this.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
